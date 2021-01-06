@@ -63,16 +63,25 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
+
 	dataMap := make(map[string]string)
 	json.Unmarshal(body, &dataMap)
+
 	id := dataMap["id"]
+	ID, _ := strconv.Atoi(id)
 	name := dataMap["name"]
-	price := dataMap["price"]
+	price, _ := strconv.Atoi(dataMap["price"])
 	desc := dataMap["description"]
-	quantity := dataMap["quantity"]
+	quantity, _ := strconv.Atoi(dataMap["quantity"])
 	status := dataMap["status"]
 	image := dataMap["image"]
 
+	fmt.Println(dataMap)
+	_, err = statement.Exec(ID, name, price, desc, quantity, status, image)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Fprintf(w, "New product added")
 	_, err = statement.Exec(id, name, price, desc, quantity, status, image)
 	if err != nil {
 		panic(err.Error())
